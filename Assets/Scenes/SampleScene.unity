@@ -230,6 +230,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   openAIEndpoint: https://api.openai.com/v1/chat/completions
   openAIKey: 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
+  aiTextPrefab: {fileID: 634051296}
 --- !u!1 &592075455
 GameObject:
   m_ObjectHideFlags: 0

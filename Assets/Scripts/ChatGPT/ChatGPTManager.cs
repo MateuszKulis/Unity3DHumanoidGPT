@@ -1,8 +1,22 @@
 using UnityEngine;
+using TMPro;
 using UnityEngine.Networking;
 using System.Collections;
 using System.Text;
 using System.Collections.Generic;
+
+
+[System.Serializable]
+public class ChatGPTResponse
+{
+    public List<ChatGPTChoice> choices;
+}
+
+[System.Serializable]
+public class ChatGPTChoice
+{
+    public ChatGPTMessage message;
+}
 
 [System.Serializable]
 public class ChatGPTMessage
@@ -10,7 +24,6 @@ public class ChatGPTMessage
     public string role;
     public string content;
 }
-
 
 [System.Serializable]
 public class ChatGPTRequest
@@ -20,10 +33,13 @@ public class ChatGPTRequest
     public string model;  
 }
 
+
 public class ChatGPTManager : MonoBehaviour
 {
     [SerializeField] private string openAIEndpoint = "https://api.openai.com/v1/chat/completions";
-    [SerializeField] private string openAIKey = "TwójKluczAPI";
+    [SerializeField] private string openAIKey = "your api key";
+
+    [SerializeField] private TextMeshProUGUI aiTextPrefab;
 
     private void Awake()
     {
@@ -69,6 +85,9 @@ public class ChatGPTManager : MonoBehaviour
             else
             {
                 string response = www.downloadHandler.text;
+                ChatGPTResponse responseData = JsonUtility.FromJson<ChatGPTResponse>(response);
+                string content = responseData.choices[0].message.content;
+                aiTextPrefab.text = content;
                 Debug.Log("Odpowiedź API: " + response);
 
             }
