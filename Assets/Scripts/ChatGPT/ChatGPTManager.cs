@@ -40,14 +40,12 @@ public class ChatGPTManager : MonoBehaviour
     [SerializeField] private string openAIKey = "your api key";
 
     [SerializeField] private TextMeshProUGUI aiTextPrefab;
+    [SerializeField] private TextMeshProUGUI playerTextArea;
 
-    private void Awake()
-    {
-        GetUserInput("Who are You?");
-    }
 
     IEnumerator SendChatGPTRequest(string userMessage)
     {
+        playerTextArea.text = "";
 
         ChatGPTRequest requestData = new ChatGPTRequest
         {
@@ -94,8 +92,9 @@ public class ChatGPTManager : MonoBehaviour
         }
     }
 
-    public void GetUserInput(string userInput)
+    public void GetUserInput()
     {
+        string userInput = playerTextArea.text.ToString();
         StartCoroutine(SendChatGPTRequest(userInput));
     }
 }
