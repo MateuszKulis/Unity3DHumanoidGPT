@@ -724,6 +724,7 @@ GameObject:
   - component: {fileID: 519420031}
   - component: {fileID: 519420029}
   - component: {fileID: 519420033}
+  - component: {fileID: 519420034}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -825,6 +826,26 @@ MonoBehaviour:
   chatContainer: {fileID: 1151725122}
   userMessagePrefab: {fileID: 167774666253017655, guid: 05798a72b9c18634d80f92b87b573bf1, type: 3}
   aiMessagePrefab: {fileID: 6892158401032346452, guid: b625a7d7a68ccbf4e9447f67e731cd18, type: 3}
+--- !u!114 &519420034
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0fed4090572ea4e42a1f6155a4f3ba7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _voiceId: CYw3kZ02Hs0563khs1Fj
+  _apiKey: b2485e134e9504f749492b50c791a852
+  _apiUrl: https://api.elevenlabs.io
+  Streaming: 0
+  LatencyOptimization: 0
+  AudioReceived:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &592075455
 GameObject:
   m_ObjectHideFlags: 0
