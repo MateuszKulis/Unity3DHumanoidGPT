@@ -5,7 +5,6 @@ using System.Collections;
 using System.Text;
 using System.Collections.Generic;
 
-
 [System.Serializable]
 public class ChatGPTResponse
 {
@@ -30,18 +29,19 @@ public class ChatGPTRequest
 {
     public List<ChatGPTMessage> messages;
     public int max_tokens;
-    public string model;  
+    public string model;
 }
-
 
 public class ChatGPTManager : MonoBehaviour
 {
     [SerializeField] private string openAIEndpoint = "https://api.openai.com/v1/chat/completions";
     [SerializeField] private string openAIKey = "your api key";
-
-    [SerializeField] private TextMeshProUGUI aiTextPrefab;
+    [TextArea(3, 10)][SerializeField] private string aiRole = "you are a lost fisherman who has lost his way home in the middle of the forest";
     [SerializeField] private TextMeshProUGUI playerTextArea;
 
+    [SerializeField] private Transform chatContainer;
+    [SerializeField] private GameObject userMessagePrefab;
+    [SerializeField] private GameObject aiMessagePrefab;
 
     IEnumerator SendChatGPTRequest(string userMessage)
     {
@@ -51,7 +51,7 @@ public class ChatGPTManager : MonoBehaviour
         {
             messages = new List<ChatGPTMessage>
             {
-                new ChatGPTMessage { role = "system", content = "You are a helpful assistant." },
+                new ChatGPTMessage { role = "system", content = aiRole },
                 new ChatGPTMessage { role = "user", content = userMessage }
             },
             max_tokens = 100,
@@ -85,9 +85,11 @@ public class ChatGPTManager : MonoBehaviour
                 string response = www.downloadHandler.text;
                 ChatGPTResponse responseData = JsonUtility.FromJson<ChatGPTResponse>(response);
                 string content = responseData.choices[0].message.content;
-                aiTextPrefab.text = content;
-                Debug.Log("Odpowiedź API: " + response);
 
+                // Dodaj nowy prefab wiadomości do kontenera
+                GameObject newMessage = Instantiate(aiMessagePrefab, chatContainer);
+                newMessage.GetComponentInChildren<TextMeshProUGUI>().text = content;
+                Debug.Log("Odpowiedź API: " + response);
             }
         }
     }
@@ -95,6 +97,10 @@ public class ChatGPTManager : MonoBehaviour
     public void GetUserInput()
     {
         string userInput = playerTextArea.text.ToString();
+
+        GameObject newMessage = Instantiate(userMessagePrefab, chatContainer);
+        newMessage.GetComponentInChildren<TextMeshProUGUI>().text = userInput;
+
         StartCoroutine(SendChatGPTRequest(userInput));
     }
 }
