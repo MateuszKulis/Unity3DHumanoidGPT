@@ -42,6 +42,7 @@ public class ChatGPTManager : MonoBehaviour
     [SerializeField] private Transform chatContainer;
     [SerializeField] private GameObject userMessagePrefab;
     [SerializeField] private GameObject aiMessagePrefab;
+    [SerializeField] private ElevenlabsAPI elevenlabsAPI;
 
     IEnumerator SendChatGPTRequest(string userMessage)
     {
@@ -89,6 +90,7 @@ public class ChatGPTManager : MonoBehaviour
                 // Dodaj nowy prefab wiadomości do kontenera
                 GameObject newMessage = Instantiate(aiMessagePrefab, chatContainer);
                 newMessage.GetComponentInChildren<TextMeshProUGUI>().text = content;
+                elevenlabsAPI.GetAudio(content);
                 Debug.Log("Odpowiedź API: " + response);
             }
         }

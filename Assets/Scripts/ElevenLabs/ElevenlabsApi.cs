@@ -15,18 +15,15 @@ public class ElevenlabsAPI : MonoBehaviour
     [SerializeField]
     private string _apiUrl = "https://api.elevenlabs.io";
 
-    private AudioClip _audioClip;
+    [SerializeField] private AudioClip _audioClip;
 
-    // If true, the audio will be streamed instead of downloaded
-    // Unfortunately, Unity has some problems with streaming audio
-    // but I left this option here in case you want to try it.
+
     public bool Streaming;
 
     [Range(0, 4)]
     public int LatencyOptimization;
 
-    // This event is used to broadcast the received AudioClip
-    public UnityEvent<AudioClip> AudioReceived;
+    public AudioSource audioSource;
 
     public ElevenlabsAPI(string apiKey, string voiceId)
     {
@@ -37,6 +34,7 @@ public class ElevenlabsAPI : MonoBehaviour
     public void GetAudio(string text)
     {
         StartCoroutine(DoRequest(text));
+        Debug.Log(text);
     }
 
     IEnumerator DoRequest(string message)
@@ -47,8 +45,7 @@ public class ElevenlabsAPI : MonoBehaviour
             model_id = "eleven_monolingual_v1"
         };
 
-        // TODO: This could be easily exposed in the Unity inspector,
-        // but I had no use for it in my work demo.
+
         var voiceSetting = new VoiceSettings
         {
             stability = 0,
@@ -72,6 +69,12 @@ public class ElevenlabsAPI : MonoBehaviour
         request.SetRequestHeader("Content-Type", "application/json");
         request.SetRequestHeader("xi-api-key", _apiKey);
         request.SetRequestHeader("Accept", "audio/mpeg");
+
+        Debug.Log("URL: " + url);
+        Debug.Log("Request JSON: " + json);
+
+        Debug.Log("Request Result: " + request.result);
+        Debug.Log("Request Error: " + request.error);
         yield return request.SendWebRequest();
 
         if (request.result != UnityWebRequest.Result.Success)
@@ -80,7 +83,8 @@ public class ElevenlabsAPI : MonoBehaviour
             yield break;
         }
         AudioClip audioClip = downloadHandler.audioClip;
-        AudioReceived.Invoke(audioClip);
+        audioSource.clip = audioClip;
+        audioSource.Play();
         request.Dispose();
     }
 
@@ -88,16 +92,16 @@ public class ElevenlabsAPI : MonoBehaviour
     public class TextToSpeechRequest
     {
         public string text;
-        public string model_id; // eleven_monolingual_v1
+        public string model_id; 
         public VoiceSettings voice_settings;
     }
 
     [Serializable]
     public class VoiceSettings
     {
-        public int stability; // 0
-        public int similarity_boost; // 0
-        public float style; // 0.5
-        public bool use_speaker_boost; // true
+        public int stability; 
+        public int similarity_boost; 
+        public float style; 
+        public bool use_speaker_boost; 
     }
 }
