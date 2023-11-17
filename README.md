@@ -1,3 +1,5 @@
+![Alt text](https://github.com/MateuszKulis/Unity3DHumanoidGPT/blob/main/screenAI.png)
+
 # Unity Voice and Dialogue System Documentation
 
 ## 1. ElevenlabsAPI
