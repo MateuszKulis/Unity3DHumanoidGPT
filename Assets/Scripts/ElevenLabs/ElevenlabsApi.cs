@@ -15,7 +15,7 @@ public class ElevenlabsAPI : MonoBehaviour
     [SerializeField]
     private string _apiUrl = "https://api.elevenlabs.io";
 
-    [SerializeField] private AudioClip _audioClip;
+    private AudioClip _audioClip;
 
 
     public bool Streaming;
