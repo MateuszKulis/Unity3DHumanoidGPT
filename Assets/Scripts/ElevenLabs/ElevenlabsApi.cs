@@ -24,6 +24,8 @@ public class ElevenlabsAPI : MonoBehaviour
     public int LatencyOptimization;
 
     public AudioSource audioSource;
+    [SerializeField]private Animator animator;
+
 
     public ElevenlabsAPI(string apiKey, string voiceId)
     {
@@ -85,8 +87,19 @@ public class ElevenlabsAPI : MonoBehaviour
         AudioClip audioClip = downloadHandler.audioClip;
         audioSource.clip = audioClip;
         audioSource.Play();
+
+        animator.SetBool("IsPlayingSound", true); 
+        Invoke("OnSoundComplete", audioSource.clip.length);
+
         request.Dispose();
     }
+
+
+    private void DisableAnimation()
+    {
+        animator.SetBool("IsPlayingSound", false);
+    }
+
 
     [Serializable]
     public class TextToSpeechRequest
