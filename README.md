@@ -1,9 +1,8 @@
 ![Alt text](https://github.com/MateuszKulis/Unity3DHumanoidGPT/blob/main/screenAI.png)
 
-# Unity Voice and Dialogue System Documentation
+# Unity3DHumanoidGPT Dialogue System Documentation
 
 ## 1. ElevenlabsAPI
-Description
 
 ElevenlabsAPI is a class in the system for handling requests and playing sounds using the ElevenLabs API.
 ### Attributes
@@ -19,8 +18,11 @@ ElevenlabsAPI is a class in the system for handling requests and playing sounds 
    * GetAudio(string text): Sends a request to the ElevenLabs API to get sound based on the provided text.
    * DoRequest(string message): Executes an HTTP request to the ElevenLabs API and plays the sound upon receiving a response.
 
+    ElevenlabsAPI elevenlabsAPI = new ElevenlabsAPI("your_api_key", "your_voice_id");
+    elevenlabsAPI.GetAudio("Hello, how are you?");
+
+
 ## 2. ChatGPTManager
-Description
 
 ChatGPTManager handles communication with the GPT API to generate responses based on user input.
 ### Attributes
@@ -35,3 +37,6 @@ ChatGPTManager handles communication with the GPT API to generate responses base
 
    * SendChatGPTRequest(string userMessage): Sends a request to the GPT API to get a response based on the player's message.
    * GetUserInput(): Retrieves text from the player and initiates the response generation process.
+
+    ChatGPTManager chatGPTManager = new ChatGPTManager();
+    chatGPTManager.GetUserInput();
