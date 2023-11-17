@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Text;
 using Newtonsoft.Json;
+using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Networking;
@@ -35,11 +36,12 @@ public class ElevenlabsAPI : MonoBehaviour
 
     public void GetAudio(string text)
     {
-        StartCoroutine(DoRequest(text));
+        SetVoiceSettings(text);
+        
         Debug.Log(text);
     }
 
-    IEnumerator DoRequest(string message)
+    private void SetVoiceSettings(string message)
     {
         var postData = new TextToSpeechRequest
         {
@@ -55,7 +57,14 @@ public class ElevenlabsAPI : MonoBehaviour
             style = 0.5f,
             use_speaker_boost = true
         };
+
         postData.voice_settings = voiceSetting;
+        animator.SetBool("IsPlayingSound", true);
+        StartCoroutine(DoRequest(postData));
+    }
+    IEnumerator DoRequest(TextToSpeechRequest postData)
+    {
+       
         var json = JsonConvert.SerializeObject(postData);
         var uH = new UploadHandlerRaw(Encoding.ASCII.GetBytes(json));
         var stream = (Streaming) ? "/stream" : "";
@@ -77,6 +86,7 @@ public class ElevenlabsAPI : MonoBehaviour
 
         Debug.Log("Request Result: " + request.result);
         Debug.Log("Request Error: " + request.error);
+
         yield return request.SendWebRequest();
 
         if (request.result != UnityWebRequest.Result.Success)
@@ -84,37 +94,27 @@ public class ElevenlabsAPI : MonoBehaviour
             Debug.LogError("Error downloading audio: " + request.error);
             yield break;
         }
-        AudioClip audioClip = downloadHandler.audioClip;
-        audioSource.clip = audioClip;
-        audioSource.Play();
 
-        animator.SetBool("IsPlayingSound", true); 
-        Invoke("OnSoundComplete", audioSource.clip.length);
+        AudioClip audioClip = downloadHandler.audioClip;
+        PlayDialogSound(audioClip);
 
         request.Dispose();
     }
 
+    private void PlayDialogSound(AudioClip audioClip)
+    {
+        audioSource.clip = audioClip;
+        audioSource.Play();
 
-    private void DisableAnimation()
+        Invoke("OnSoundComplete", audioSource.clip.length);
+    }
+
+
+    private void OnSoundComplete()
     {
         animator.SetBool("IsPlayingSound", false);
     }
 
 
-    [Serializable]
-    public class TextToSpeechRequest
-    {
-        public string text;
-        public string model_id; 
-        public VoiceSettings voice_settings;
-    }
-
-    [Serializable]
-    public class VoiceSettings
-    {
-        public int stability; 
-        public int similarity_boost; 
-        public float style; 
-        public bool use_speaker_boost; 
-    }
+    
 }
